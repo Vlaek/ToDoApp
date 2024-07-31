@@ -78,8 +78,9 @@ dependencies {
 
     implementation (libs.androidx.recyclerview)
 
-//    implementation (libs.androidx.viewbinding)
     implementation (libs.viewbinding)
+
+    implementation (libs.androidx.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

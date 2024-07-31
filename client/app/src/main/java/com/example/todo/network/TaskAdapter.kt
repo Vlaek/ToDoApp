@@ -9,6 +9,7 @@ import com.example.todo.databinding.ItemTaskBinding
 
 interface OnTaskClickListener {
     fun onDeleteClick(taskId: Long)
+    fun onChangeStatusClick(taskId: Long, task: Task)
     fun onUpdateClick(taskId: Long, task: Task)
 }
 
@@ -30,6 +31,10 @@ class TaskAdapter(private val listener: OnTaskClickListener) : ListAdapter<Task,
 
             binding.deleteButton.setOnClickListener {
                 listener.onDeleteClick(task.id)
+            }
+
+            binding.changeStatusButton.setOnClickListener {
+                listener.onChangeStatusClick(task.id, task)
             }
 
             binding.updateButton.setOnClickListener {

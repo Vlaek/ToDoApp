@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:targetApi="31">
+        <activity android:name=".ui.CreateTaskActivity" />
+        <activity android:name=".ui.EditTaskActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

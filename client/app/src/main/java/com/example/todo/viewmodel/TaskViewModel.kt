@@ -23,15 +23,20 @@ class TaskViewModel(private val taskApi: TaskApi) : ViewModel() {
     private val _taskDeletion = MutableLiveData<Boolean>()
     val taskDeletion: LiveData<Boolean> get() = _taskDeletion
 
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
     fun fetchTasks() {
         viewModelScope.launch {
             try {
                 val response: Response<List<Task>> = taskApi.getTasks()
                 if (response.isSuccessful) {
                     _tasks.value = response.body()
+                } else {
+                    _error.value = "Error fetching tasks: ${response.message()}"
                 }
             } catch (e: Exception) {
-                // Handle the exception
+                _error.value = "Exception fetching tasks: ${e.message}"
             }
         }
     }
@@ -41,10 +46,12 @@ class TaskViewModel(private val taskApi: TaskApi) : ViewModel() {
             try {
                 val response: Response<Task> = taskApi.createTask(task)
                 if (response.isSuccessful) {
-                    _taskCreation.value = response.body()
+                    fetchTasks()
+                } else {
+                    _error.value = "Error creating task: ${response.message()}"
                 }
             } catch (e: Exception) {
-                // Handle the exception
+                _error.value = "Exception creating task: ${e.message}"
             }
         }
     }
@@ -55,10 +62,12 @@ class TaskViewModel(private val taskApi: TaskApi) : ViewModel() {
                 val response: Response<Task> = taskApi.updateTask(id, task)
                 if (response.isSuccessful) {
                     _taskUpdate.value = response.body()
-                    fetchTasks();
+                    fetchTasks()
+                } else {
+                    _error.value = "Error updating task: ${response.message()}"
                 }
             } catch (e: Exception) {
-                // Handle the exception
+                _error.value = "Exception updating task: ${e.message}"
             }
         }
     }
@@ -67,11 +76,16 @@ class TaskViewModel(private val taskApi: TaskApi) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response: Response<Void> = taskApi.deleteTask(id)
-                _taskDeletion.value = response.isSuccessful
-                fetchTasks();
+                if (response.isSuccessful) {
+                    _taskDeletion.value = true
+                    fetchTasks()
+                } else {
+                    _taskDeletion.value = false
+                    _error.value = "Error deleting task: ${response.message()}"
+                }
             } catch (e: Exception) {
-                // Handle the exception
                 _taskDeletion.value = false
+                _error.value = "Exception deleting task: ${e.message}"
             }
         }
     }
