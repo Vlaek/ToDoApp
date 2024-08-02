@@ -38,10 +38,23 @@ class EditTaskActivity : AppCompatActivity() {
         binding.taskCompletedCheckbox.isChecked = taskCompleted
 
         binding.saveButton.setOnClickListener {
+            val title = binding.taskTitleEditText.text.toString()
+            val description = binding.taskDescriptionEditText.text.toString()
+
+            if (title.isBlank()) {
+                Toast.makeText(this, "Заполните название", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (description.isBlank()) {
+                Toast.makeText(this, "Заполните описание", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val updatedTask = Task(
                 id = taskId,
-                title = binding.taskTitleEditText.text.toString(),
-                description = binding.taskDescriptionEditText.text.toString(),
+                title = title,
+                description = description,
                 completed = binding.taskCompletedCheckbox.isChecked
             )
             taskViewModel.updateTask(taskId, updatedTask)

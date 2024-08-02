@@ -1,6 +1,7 @@
 package com.example.todo.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.todo.databinding.ActivityCreateOrEditTaskBinding
@@ -22,10 +23,23 @@ class CreateTaskActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.saveButton.setOnClickListener {
+            val title = binding.taskTitleEditText.text.toString()
+            val description = binding.taskDescriptionEditText.text.toString()
+
+            if (title.isBlank()) {
+                Toast.makeText(this, "Заполните название", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (description.isBlank()) {
+                Toast.makeText(this, "Заполните описание", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val task = Task(
                 id = 0,
-                title = binding.taskTitleEditText.text.toString(),
-                description = binding.taskDescriptionEditText.text.toString(),
+                title = title,
+                description = description,
                 completed = binding.taskCompletedCheckbox.isChecked
             )
             taskViewModel.createTask(task)
